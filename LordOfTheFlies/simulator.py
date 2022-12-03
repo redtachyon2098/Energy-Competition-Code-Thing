@@ -3,8 +3,8 @@ import random as r
 import gc
 #_______________Every value and function worth modifying__________
 verbose = True
-render = True
-logstuff = True
+render = False
+logstuff = False
 howmanytimesteps = 1000
 viewradius = 5
 biomesize = 30
