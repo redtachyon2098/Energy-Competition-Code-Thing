@@ -3,8 +3,8 @@ import random as r
 import gc
 #_______________Every value and function worth modifying__________
 verbose = True
-render = False
-logstuff = False
+render = True
+stuff = True
 howmanytimesteps = 1000
 viewradius = 5
 biomesize = 30
@@ -290,6 +290,6 @@ for timestep in range(howmanytimesteps):
     if verbose:
         print(1 / (t.time() - clock), "FPS at", len(controller) / (t.time() - clock), "PPS")
     if logstuff:
-        print("LOGWIP")
+        print("")
 if render:
     p.quit()
