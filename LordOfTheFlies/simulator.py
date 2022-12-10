@@ -1,7 +1,7 @@
 import numpy as n
 import random as r
 #_______________Stuff you'll modify a lot.__________
-verbose = True
+verbose = True #This will show some information in the terminal.
 render = True #This requires pygame to enable, it will render the map and the players using one piexel per grid/player.
 logstuff = True #This makes the code export some game data to a file in the Log folder. It's not complete yet, and it will hog your RAM if you enable it.
 players = [ #The names of the actual players must be listed here in order for them to appear in the game. Add your folder to the Strategies folder and put their names here.
