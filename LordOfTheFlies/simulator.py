@@ -10,6 +10,7 @@ players = [ #The names of the actual players must be listed here in order for th
 howmanytimesteps = 1000 #How long do you want the game to run before it auto-terminates?
 viewradius = 5 #How far should the players be able to see?
 biomesize = 30 #How big should the biomes in the terrain generation be?
+biomedetail = 1 #How jagged should the edges of the terrain be?
 mapx = 200 #How wide should the map be?
 mapy = 200 #How tall should the map be?
 NPCs = [ #All the foliage/other stuff that exist in the game. The raw code of each can be found in the Strategies/Nature folder. You can comment out specific objects to stop them from spawning. NOTE: Commenting out "Nature.Apple" without commenting out "Nature.Tree" or "Nature.Sequoia" will break a few things.
@@ -19,9 +20,9 @@ NPCs = [ #All the foliage/other stuff that exist in the game. The raw code of ea
     "Nature.Bush",
     "Nature.Fern",
     "Nature.Cactus"]
-NPCAmounts = [200, 200, 0, 100, 100, 100] #How much should each non-player object initially spawn?
+NPCAmounts = [20, 20, 0, 100, 100, 100] #How much should each non-player object initially spawn?
 NPCEnergy = [10, 10, 100, 100, 100, 100] #How much energy should each non-player onject initially have?
-playerAmount = 1000 #How many instances of each strategy should initially spawn?
+playerAmount = 100 #How many instances of each strategy should initially spawn?
 playerEnergy = 1000 #How much energy should each player initially have?
 
 #_____________Stuff you won't modify much._________________
@@ -90,8 +91,17 @@ initi = n.random.rand(mapx, mapy)
 convx = int(biomesize)
 convy = int(biomesize)
 conv = n.random.rand(convx, convy)
-ring = n.roll(n.roll(conv, 1, axis=0), 1, axis=1) + n.roll(n.roll(conv, 1, axis=0), 0, axis=1) + n.roll(n.roll(conv, 1, axis=0), -1, axis=1) + n.roll(conv, 1, axis=1) + n.roll(conv, -1, axis=1) + n.roll(n.roll(conv, -1, axis=0), 1, axis=1) + n.roll(n.roll(conv, -1, axis=0), 0, axis=1) + n.roll(n.roll(conv, -1, axis=0), -1, axis=1)
-conv += ring
+mconvx = n.outer(n.arange(int(convx / biomedetail)) - int(convx / (2 * biomedetail)), n.zeros((int(convy / biomedetail))) + 1)
+mconvy = n.outer(n.zeros((int(convx / biomedetail))) + 1, n.arange(int(convy / biomedetail)) - int(convy / (2 * biomedetail)))
+metaconv = 1 / ((mconvx / (convx / biomedetail)) ** 2 + (mconvy / (convy / biomedetail)) ** 2 + 1)
+applied = n.zeros_like(conv)
+for x in range(int(convx / biomedetail)):
+    xax = n.roll(conv, x, axis=0)
+    for y in range(int(convy / biomedetail)):
+        applied += n.roll(xax, y, axis=1) * metaconv[x,y]
+conv = applied
+conv -= n.amin(conv)
+conv /= n.amax(conv) / 4
 world = n.zeros_like(initi)
 for x in range(convx):
     xax = n.roll(initi, x, axis=0)
@@ -104,10 +114,6 @@ radii = radiusvalues[biome]
 colormap = biomecolors[biome]
 if verbose:
     print("Made Map")
-
-if logstuff:
-    im = i.fromarray((n.swapaxes(colormap, 0, 1)).astype("uint8"))
-    im.save("Log/Map.png")
 
 #Prep Characters.
 if verbose:
@@ -159,8 +165,11 @@ def getinput(index, strat, xcor, ycor, energ, memory):
     direction, split, chasetarget, memory, splitmemory, ping = strat(view, nx, ny, nt, ne, energ, memory)
     radius = radii[xcor, ycor]
     direction = n.clip(direction, -radius, radius)
+    #print(index, chasetarget, len(ni))
     if chasetarget != -1 and chasetarget < len(ni):
         chasetarget = ni[chasetarget]
+    else:
+        chasetarget = -1
     return direction[0], direction[1], split, chasetarget, memory, splitmemory, ping
 
 if render:
@@ -215,9 +224,8 @@ try:
         for x in range(len(chasers)): #Chasing
             guy = chasers[x]
             tar = chasees[x]
-            radius = radii[mx[guy], my[guy]]
-            dx = mx[tar] - mx[guy]
-            dy = my[tar] - my[guy]
+            dx = xcoord[tar] + mx[tar] - xcoord[guy] - mx[guy]
+            dy = ycoord[tar] + my[tar] - ycoord[guy] - my[guy]
             if dx > 0:
                 if dx > mapx / 2:
                     dx = dx - mapx
@@ -256,7 +264,7 @@ try:
         eng = me[alive]
         con = mc[alive]
         mem = mm[alive]
-        col = mcol[alive]
+        col = mcol[alive] % 256
         hostile = hosti[con]
         consumable = consu[con]
         #Collision detection.
@@ -288,20 +296,25 @@ try:
         colors = col[nextgen]
         typ = typs[controller]
         indices = n.arange(len(controller))
-        if logstuff:
+        if len(indices) == 0:
+            break
+        if logstuff:#primary 3+2+2+2+2+1 secondary 3+1+2+1
             oldinds = oldinds[alive][nextgen]
             indnums = list((oldinds  / 65536).astype(int)) +  list(((oldinds % 65536) / 256).astype(int)) +  list((oldinds % 256).astype(int))
             hexn = indnums.copy()
             if timestep == 0:
+                conhex = list(((controller % 65536) / 256).astype(int)) + list(controller % 256)
                 xcoordhex = list(((xcoord % 65536) / 256).astype(int)) + list(xcoord % 256)
                 ycoordhex = list(((ycoord % 65536) / 256).astype(int)) + list(ycoord % 256)
-                energyhex = list(((energy % 65536) / 256).astype(int)) + list(energy.astype(int) % 256)
-                hexn += xcoordhex + ycoordhex + energyhex
+                hexn += conhex + xcoordhex + ycoordhex
             else:
                 px = px[alive][nextgen] + 8
                 py = py[alive][nextgen] + 8
                 hexn += list(px * 16 + py)
-            hexn = [int((len(hexn) % 65536) / 256), len(hexn) % 256] + hexn
+            energyhex = list(((n.clip(energy, 0, 65535) % 65536) / 256).astype(int)) + list(n.clip(energy, 0, 65535).astype(int) % 256)
+            hexn += energyhex
+            hexn += list(16 * (colors[:,0] / 64).astype(int) + 4 * (colors[:,1] / 64).astype(int) + (colors[:,0] / 64).astype(int))
+            hexn = [int(len(controller) / 65536), int((len(controller) % 65536) / 256), len(controller) % 256] + hexn
             finalbinary += bytes(hexn)
         if render:
             screen = colormap.copy()
@@ -313,15 +326,18 @@ try:
             display.blit(surf, (0, 0))
             p.display.update()
         if verbose:
-            print(1 / (t.time() - clock), "FPS at", len(controller) / (t.time() - clock), "PPS")
-        if logstuff:
-            print("")
+            if logstuff:
+                print("Total Binary Size:", len(finalbinary))
+            print(1 / (t.time() - clock), "FPS at", len(controller) / (t.time() - clock), "PPS for", len(controller), "players.\n")
     if render:
         p.quit()
 except KeyboardInterrupt:
     print("Terminated.")
 if logstuff:
-    file = open("Log/BinaryExport.bin","wb")
-    file.write(finalbinary)
-    file.close()
-    print("Exported log.")
+    if input("Do you want to export the data? (y/n)") == 'y':
+        im = i.fromarray((n.swapaxes(colormap, 0, 1)).astype("uint8"))
+        im.save("Log/Map.png")
+        file = open("Log/BinaryExport.bin","wb")
+        file.write(finalbinary)
+        file.close()
+        print("Exported log.")
