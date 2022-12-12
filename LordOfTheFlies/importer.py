@@ -104,6 +104,7 @@ if safe:
             print("fps   -Sets the FPS for the playback(no frames are skipped.)\n")
             print("advance  -Advances the playback by a few timesteps.")
             print("show   -Shows the current frame.")
+            print("console  -Lets you type Python code directly.")
         if command == 'play':
             destination = int(input("When should the playback stop?\ndestination(0 ~ " + str(howlong - 1) + ") >"))
             print("You can interrupt the simulation at any time.")
