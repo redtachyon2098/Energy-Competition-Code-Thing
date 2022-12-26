@@ -193,8 +193,12 @@ if safe:
                 (i.fromarray(n.swapaxes(screen, 0, 1))).show()
         if command == 'console':
             if not 'traceback' in globals():
-                if input("This requires the traceback library, is that okay?\nreply(y/n) >") == 'y':
+                if input("You need the traceback library to view error messages, is that okay?\nreply(y/n) >") == 'y':
                     import traceback
+                    trace = True
+                else:
+                    print("Proceeding without the traceback library. This disables all error message reporting.")
+                    trace = False
             print("Type quit() to quit the console and return to the importer.")
             while True:
                 prompt = input("console >")
@@ -205,5 +209,7 @@ if safe:
                         exec("rommand = '" + prompt + "'")
                         exec(rommand)
                     except:
-                        print(traceback.format_exc())
-
+                        if trace:
+                            print(traceback.format_exc())
+                        else:
+                            print("An error occurred.")
