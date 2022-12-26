@@ -11,8 +11,8 @@ howmanytimesteps = 1000 #How long do you want the game to run before it auto-ter
 viewradius = 5 #How far should the players be able to see?
 biomesize = 30 #How big should the biomes in the terrain generation be?
 biomedetail = 1 #How jagged should the edges of the terrain be?
-mapx = 200 #How wide should the map be?
-mapy = 200 #How tall should the map be?
+mapx = 100 #How wide should the map be?
+mapy = 100 #How tall should the map be?
 NPCs = [ #All the foliage/other stuff that exist in the game. The raw code of each can be found in the Strategies/Nature folder. You can comment out specific objects to stop them from spawning. NOTE: Commenting out "Nature.Apple" without commenting out "Nature.Tree" or "Nature.Sequoia" will break a few things.
     "Nature.Tree",
     "Nature.Sequoia",
@@ -20,9 +20,9 @@ NPCs = [ #All the foliage/other stuff that exist in the game. The raw code of ea
     "Nature.Bush",
     "Nature.Fern",
     "Nature.Cactus"]
-NPCAmounts = [20, 20, 0, 100, 100, 100] #How much should each non-player object initially spawn?
+NPCAmounts = [20, 20, 0, 30, 30, 30] #How much should each non-player object initially spawn?
 NPCEnergy = [10, 10, 100, 100, 100, 100] #How much energy should each non-player onject initially have?
-playerAmount = 100 #How many instances of each strategy should initially spawn?
+playerAmount = 10 #How many instances of each strategy should initially spawn?
 playerEnergy = 1000 #How much energy should each player initially have?
 
 #_____________Stuff you won't modify much._________________
@@ -224,8 +224,8 @@ try:
         for x in range(len(chasers)): #Chasing
             guy = chasers[x]
             tar = chasees[x]
-            dx = xcoord[tar] + mx[tar] - xcoord[guy] - mx[guy]
-            dy = ycoord[tar] + my[tar] - ycoord[guy] - my[guy]
+            dx = xcoord[tar] + mx[tar] - xcoord[guy]
+            dy = ycoord[tar] + my[tar] - ycoord[guy]
             if dx > 0:
                 if dx > mapx / 2:
                     dx = dx - mapx
@@ -313,7 +313,7 @@ try:
                 hexn += list(px * 16 + py)
             energyhex = list(((n.clip(energy, 0, 65535) % 65536) / 256).astype(int)) + list(n.clip(energy, 0, 65535).astype(int) % 256)
             hexn += energyhex
-            hexn += list(16 * (colors[:,0] / 64).astype(int) + 4 * (colors[:,1] / 64).astype(int) + (colors[:,0] / 64).astype(int))
+            hexn += list(32 * (colors[:,0] / 32).astype(int) + 8 * (colors[:,1] / 64).astype(int) + (colors[:,0] / 32).astype(int))
             hexn = [int(len(controller) / 65536), int((len(controller) % 65536) / 256), len(controller) % 256] + hexn
             finalbinary += bytes(hexn)
         if render:
