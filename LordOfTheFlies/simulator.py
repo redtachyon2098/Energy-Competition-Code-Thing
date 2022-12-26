@@ -329,6 +329,12 @@ try:
             if logstuff:
                 print("Total Binary Size:", len(finalbinary))
             print(1 / (t.time() - clock), "FPS at", len(controller) / (t.time() - clock), "PPS for", len(controller), "players.\n")
+    survivors = n.unique(controller[typ == -1])
+    HallOfFame = ""
+    for x in range(len(survivors)):
+        HallOfFame += nams[survivors[x]]
+        HallOfFame += ", "
+    print("Congratulations " + HallOfFame + "you have survived the carnage and have been rescued!")
     if render:
         p.quit()
 except KeyboardInterrupt:
