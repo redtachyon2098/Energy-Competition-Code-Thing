@@ -180,9 +180,9 @@ if logstuff:
     finalbinary = bytes()
 running = True
 try:
+    if verbose:
+        clock = t.time()
     for timestep in range(howmanytimesteps):
-        if verbose:
-            clock = t.time()
         mx = []
         my = []
         me = []
@@ -326,9 +326,15 @@ try:
             display.blit(surf, (0, 0))
             p.display.update()
         if verbose:
-            if logstuff:
-                print("Total Binary Size:", len(finalbinary))
-            print(1 / (t.time() - clock), "FPS at", len(controller) / (t.time() - clock), "PPS for", len(controller), "players.\n")
+            if t.time() - clock >= 1:
+                clock = t.time()
+                printout = "Population for Time Step " + str(timestep) + ":\n"
+                for x in range(len(nams)):
+                    printout += nams[x] + " : " + str((controller == x).astype(int).sum()) + "\n"
+                printout += "Average Energy: " + str(n.average(energy)) + "\n"
+                if logstuff:
+                    printout += "Total Binary size: " + str(len(finalbinary)) + " bytes\n"
+                print(printout)
     survivors = n.unique(controller[typ == -1])
     HallOfFame = ""
     for x in range(len(survivors)):
