@@ -1,10 +1,7 @@
-This is(was) a simulator program for a coding competition, in which agents move around in a toroidal grid world.
-Inside the main folder there are three things: simulator.py, Strategies, and Log.
-
-If you want your strategy code to battle with te preexisting ones,
-add a folder with your code in it inside the Strategies folder and append to the name list in simulator.py.
-
-The Log folder stores data from a previous run, which includes the image of the map along with a binary file containing player data.
-
-More exact instructions on what you can do with this simulator will soon be provided as comments in simulator.py itself,
-since I feel like that would make modification easier for the user.
+Welcome to the documentation of this game!
+This is the code for a competition game, where players create code which controls agents in a simulated environment, with the goal of surviving for a set amount of time.
+Before explaining how to use the program, I'll explain the detail behind the game mechanics.
+1. The world is finite yet toroidal, by which I mean that there is no "world border". If you go too far to the right, you'll wrap around the world and appear on the other side.
+2. The world is a grid. Each grid point can be one of four different "biomes": Desert(ID:1), Grass(ID:2), Jungle(ID:3) and Mountain(ID:4). There's also the occasional Oasis(ID:0). Biomes also have a constant "drain value" (Oasis: 0.4, Desert: 0.6, Grass: 0.5, Jungle: 0.6, Mountain: 0.6) and a "radius value" (Oasis: 3, Desert: 3, Grass: 4, Jungle: 3, Mountain: 2).
+3. Players move by submitting a vector coordinate every game tick. It is clipped with the biome radius value of the grid point the player is on, and gets added to their current coordinate.
+4. Players have a value called their "energy". Various actions can change this value(Decrease: Moving around(length of vector coordinate, raised to the power of twice the drain value), Chasing(Same as moving, will be explained later), Splitting(halves your energy). Increase: Consumption of foliage and players(If successful, 90% of the "prey"'s energy.)). If the energy becomes equal to or under zero, the player is considered dead and is eliminated from the game.
