@@ -51,6 +51,6 @@ def strategy(tile, nearx, neary, neartype, nearyenrg, myenerg, memory):
    3. Add another entry to this list in the format of "*(Whatever your folder name was)*.*(Whatever your file name was(leave out the extension.))*".
    4. Try running simulator.py again. This time, you should see a bunch of blue dots, slowly going right a pixel at a time. If so, congratulations, you have successfully created your first strategy file!
 
-     Some settings
+ Some settings
 
  When you open simulator.py, you should see a flood of comments at the every beginning. Those comments detail what exactly each parameter at the beginning of the file does. Rather than trying to list every setting in this document, the reader is encouraged to explore the file, read the comments and try tweaking things for themselves.
