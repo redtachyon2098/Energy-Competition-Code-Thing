@@ -50,7 +50,7 @@ def strategy(tile, nearx, neary, neartype, nearyenrg, myenerg, memory):
    2. For testing purposes, try saving your file and run simulator.py. You should see no change. This is because simulator.py is not yet aware that you have created a strategy. To change this, open simulator.py in a text editor or in your IDE. Under "Stuff you'll modify a lot.", You should see a list called "players", inside of which you'll find the two entries "ExampleStrats.Monkey" and "ExampleStrats.Collector". This list is where all the names of the players' strategy files should be.
    3. Add another entry to this list in the format of "*(Whatever your folder name was)*.*(Whatever your file name was(leave out the extension.))*".
    (Example: If you had named your file "Destroyer.py" and put it in a folder called "redtachyon2718", then type in "redtachyon2718.Destroyer")
-   4. Try running simulator.py again. This time, you should see a bunch of blue dots, slowly going right a pixel at a time. If so, congratulations, you have successfully created your first strategy file!
+   4. Try running simulator.py again. This time, you should see a bunch of blue dots among the other dots, slowly going right a pixel at a time. If so, congratulations, you have successfully created your first strategy file!
 
  Some settings
 
