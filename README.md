@@ -20,5 +20,10 @@ The code does have a few comments in it to help you play around with it, but I'l
    *1. Installation*
 You don't need to do anything fancy to get this program on to your computer.
 1. Make sure you have Python 3 installed on your computer. Installing Python is a bit outside of the scope for this document, but a few Google searches should get you there.
+
+You also need some Python libraries installed.
+Crucial libraries(the program will not run at all without these installed): numpy, random.
+Optional libraries(some features use these, but you can disable them and still run it): PIL(the Python Image Library), pygame, time, traceback.
+
 2. Either clone this repository or click the "Download ZIP" button under the "<> Code" tab and extract the ZIP file.
-3. To test that everything is working correctly, 
+3. To test that everything is working correctly, enter the StrandedInAIsland folder and run simulator.py. The default settings has every feature enabled(rendering, verbose data printing, binary file log export). Hopefully, it shouldn't give you an error, and you should see dots zooming around a pixelized map for a few seconds or minutes, and a "Do you want to export the data? (y/n)" message should appear. Type 'n' for now, and the program should terminate. Next, try executing importer.py. It should start a basic text-based interface. Try typing "help"(It's case sensitive). It should list a series of commands. These are the commands that let you navigate through an exported game recording. Type "play", and it should say "When should the playback stop? destination(0 ~ 999) >". Type 500. You should see more dots zooming about on the screen, only more quickly than before. The program is playing back a pre-recorded game file, more specifically, it's loading the binary file "Logs/BinaryExport.bin". Type 'help' again and try fooling around with the other commands (Don't try "console" for now, to reduce confusion). Hopefully, none of them should give an error.
